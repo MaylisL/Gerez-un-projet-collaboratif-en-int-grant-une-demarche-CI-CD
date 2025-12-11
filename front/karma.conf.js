@@ -29,16 +29,23 @@ module.exports = function (config) {
       subdir: '.',
       reporters: [
         { type: 'html' },
-        { type: 'text-summary' }
+        { type: 'text-summary' },
+        { type: 'lcov', subdir: '.' }
       ]
     },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false,
+    autoWatch: process.env.CI ? false : true,
+    browsers: [process.env.CI ? 'ChromeHeadlessForCI' : 'Chrome'],
+    singleRun: !!process.env.CI,
+    customLaunchers: {
+      ChromeHeadlessForCI: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox', '--disable-gpu']
+      }
+    },
     restartOnFileChange: true
   });
 };
