@@ -21,7 +21,9 @@ jobs:
           cache: maven
 
       - name: Backend - Build and Test
-        run: mvn -B clean verify
+        run: | 
+            mvn -B clean test 
+            mvn jacoco:report
         working-directory: back/
 
       - name: Upload backend reports
@@ -46,7 +48,9 @@ jobs:
       - name: Run Angular tests (with coverage)
         env:
           CI: "true"
-        run: npm test -- --watch=false --code-coverage
+        run: | 
+            npm run build
+            npm run coverage
         working-directory: front/
 
       - name: Upload frontend coverage
